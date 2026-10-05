@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "درع فطن — حماية التصفح",
+  "version": "2.1.0",
+  "description": "يكشف مؤشرات انتحال جهات محددة وطلب بيانات حساسة دون قراءة قيم الحقول، ويعرض القناة الرسمية.",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "درع فطن"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "identity.js",
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}

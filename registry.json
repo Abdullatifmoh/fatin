@@ -1,0 +1,32 @@
+[
+  {
+    "id": "kfu",
+    "name": "جامعة الملك فيصل",
+    "aliases": [
+      "جامعة الملك فيصل",
+      "king faisal university"
+    ],
+    "domains": [
+      "kfu.edu.sa"
+    ],
+    "official_url": "https://www.kfu.edu.sa/",
+    "source": "https://www.kfu.edu.sa/",
+    "reviewed": "2026-10-05"
+  },
+  {
+    "id": "spl",
+    "name": "البريد السعودي | سبل",
+    "aliases": [
+      "البريد السعودي",
+      "سبل",
+      "saudi post",
+      "spl online"
+    ],
+    "domains": [
+      "splonline.com.sa"
+    ],
+    "official_url": "https://splonline.com.sa/ar/",
+    "source": "https://splonline.com.sa/ar/",
+    "reviewed": "2026-10-05"
+  }
+]
