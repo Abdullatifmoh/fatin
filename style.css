@@ -208,3 +208,43 @@ button{touch-action:manipulation}
 .field-study-icon{font-size:30px;background:#eee7f8;border-radius:14px;padding:9px 14px;flex-shrink:0}
 .field-study-note h2{font-size:20px;margin:0 0 8px}.field-study-note p{margin-bottom:8px}
 @media(max-width:680px){.checkout-alert-guide{padding:16px}.checkout-alert-guide h3{font-size:18px}.checkout-alert-guide p{font-size:14px}.checkout-alert-actions button{width:100%}.field-study-note{padding:18px;gap:10px}.field-study-icon{font-size:22px;padding:7px}}
+
+/* Interactive payment demonstration on phishing-demo screen. */
+.checkout-lab{margin:0 0 26px;border:1px solid #d9c8ed;border-radius:23px;background:#fff;padding:25px;box-shadow:0 12px 40px #39215b0b;scroll-margin-top:20px}
+.checkout-lab-heading{display:flex;align-items:start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.checkout-kicker{display:inline-block;color:#6340ad;font-size:13px;font-weight:800;margin-bottom:8px}
+.checkout-lab-heading h2{font-size:25px;line-height:1.45;color:#2f2050;margin:0 0 7px}
+.checkout-lab-heading p{margin:0;color:#6e6082;font-size:14px;line-height:1.8;max-width:750px}
+.checkout-lab-count{border:1px solid #dfd2f2;color:#5c3c9c;background:#f7f3fc;border-radius:40px;padding:7px 14px;white-space:nowrap;font-size:12px;font-weight:700}
+.checkout-demo-choices{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.checkout-demo-choice{background:#f7f3fc;border:1px solid #e4daf1;color:#57446d;border-radius:12px;padding:11px 17px;font-size:14px;font-weight:700;min-height:47px}
+.checkout-demo-choice.is-selected{color:#fff;border-color:#6340ad;background:#6340ad;box-shadow:0 5px 14px #6340ad25}
+.checkout-demo-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:18px}
+.checkout-fake-store{border-radius:17px;border:1px solid #e6dfec;background:#faf9fd;padding:21px;min-width:0}
+.checkout-store-bar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:18px}
+.checkout-store-bar>div{display:flex;align-items:center;gap:10px}.checkout-store-bar strong{font-size:18px;color:#2a2043}
+.checkout-store-icon{background:#eee6f9;padding:9px;border-radius:11px;font-size:23px;line-height:1}
+.checkout-training-tag{color:#745a91;background:#ede7f4;padding:4px 10px;border-radius:35px;font-size:11px;white-space:nowrap}
+.checkout-site-line{padding:12px;background:#fff;border:1px solid #e8dfef;border-radius:10px;margin-bottom:17px}
+.checkout-site-line span{display:block;font-size:12px;color:#716482;margin-bottom:5px}.checkout-site-line code{display:block;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#493671;overflow-wrap:anywhere;text-align:left}
+.checkout-order-box{border-bottom:1px solid #e8dfed;padding:0 0 13px;margin-bottom:15px}.checkout-order-box p{font-size:13px;font-weight:700;color:#574669;margin-bottom:12px}.checkout-order-box>div{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:10px}.checkout-order-total{border-top:1px solid #e2d7ed;padding-top:13px;color:#2f2254}
+.checkout-fields-hint{font-size:12px;color:#635471;background:#f0ebf7;border-radius:10px;padding:10px 12px;line-height:1.65;margin-bottom:15px}
+.checkout-pay-button{width:100%;min-height:51px;font-size:16px}
+.checkout-fake-store>small{font-size:11px;text-align:center;margin-top:10px}
+.checkout-result-side{border-radius:17px;border:1px solid #d9e9df;background:#f5faf7;padding:22px;min-width:0;display:flex;align-items:stretch}
+.checkout-before{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;width:100%}
+.checkout-circle{font-size:34px;background:#e1f4e9;width:75px;height:75px;border-radius:25px;display:grid;place-items:center;margin-bottom:5px}
+.checkout-before h3{font-size:20px;color:#24523e;margin:0}.checkout-before p{font-size:14px;color:#567360;line-height:1.85;max-width:350px;margin:0}
+.checkout-process{display:flex;flex-direction:column;align-items:stretch;gap:7px;text-align:right;margin-top:15px;width:100%;max-width:315px}
+.checkout-process span{font-size:13px;background:#e7f3eb;padding:8px 13px;border-radius:9px;color:#37634f}
+.checkout-result-feedback{width:100%;outline:0}.checkout-result-feedback.is-warning{color:#683b19}.checkout-result-feedback.is-neutral{color:#245942}
+.checkout-result-side:has(.checkout-result-feedback.is-warning:not([hidden])){background:#fff8ed;border-color:#ecd7b4}
+.checkout-feedback-top{display:flex;align-items:start;gap:12px}.checkout-feedback-symbol{width:47px;height:47px;display:grid;place-items:center;font-size:26px;background:#fff0db;border-radius:12px;flex-shrink:0}.checkout-result-feedback.is-neutral .checkout-feedback-symbol{background:#e1f4ea}
+.checkout-feedback-label{font-size:12px;color:#9a641c;font-weight:700}.checkout-result-feedback.is-neutral .checkout-feedback-label{color:#397857}
+.checkout-result-feedback h3{font-size:21px;margin:5px 0 12px;color:#683b19}.checkout-result-feedback.is-neutral h3{color:#245942}
+.checkout-result-feedback p{font-size:14px;line-height:1.8;color:#695a4b;margin:5px 0 12px}.checkout-result-feedback.is-neutral p{color:#476b56}
+.checkout-result-feedback ul{padding-right:20px;margin:8px 0 18px;font-size:13px;line-height:1.9}.checkout-feedback-actions{display:flex;flex-wrap:wrap;gap:8px}
+.checkout-feedback-actions button{font-size:13px;padding:10px 14px;min-height:42px}
+.checkout-lab-footer{color:#786b85;font-size:12px;line-height:1.8;margin:17px 0 0}
+@media(max-width:900px){.checkout-demo-columns{grid-template-columns:1fr}.checkout-result-side{min-height:225px}}
+@media(max-width:540px){.checkout-lab{padding:15px;border-radius:16px}.checkout-lab-heading{display:block}.checkout-lab-heading h2{font-size:21px}.checkout-lab-count{display:none}.checkout-demo-choices{display:grid;grid-template-columns:1fr;gap:8px}.checkout-demo-choice{width:100%}.checkout-fake-store,.checkout-result-side{padding:16px}.checkout-store-bar strong{font-size:16px}.checkout-training-tag{font-size:10px}.checkout-feedback-actions{display:grid;grid-template-columns:1fr}.checkout-feedback-actions button{width:100%}}

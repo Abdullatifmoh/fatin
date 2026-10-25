@@ -56,6 +56,62 @@ $('#closeCallDemo')?.addEventListener('click',()=>$('#callDemoDialog').close());
 $('#closeDialog').addEventListener('click',()=>$('#installDialog').close());
 stats();health();
 
+// Interactive checkout walkthrough. No payment inputs, no navigation to a checkout and no real card processing.
+const checkoutExamples={
+ suspicious:{title:'سبل | رسوم توصيل',url:'https://spl-delivery.example.test/payment',item:'رسوم توصيل شحنة',price:'14.90 ر.س',alert:true},
+ ordinary:{title:'متجر تجريبي',url:'https://shop.example.test/checkout',item:'طلب شراء تجريبي',price:'149.00 ر.س',alert:false}
+};
+let checkoutScenario='suspicious';
+function selectCheckoutScenario(name){
+ if(!Object.hasOwn(checkoutExamples,name))return;
+ checkoutScenario=name;
+ const example=checkoutExamples[name];
+ $('#checkoutStoreTitle').textContent=example.title;
+ $('#checkoutDemoDomain').textContent=example.url;
+ $('#checkoutItemName').textContent=example.item;
+ $('#checkoutOrderPrice').textContent=example.price;
+ $('#checkoutOrderTotal').textContent=example.price;
+ $('#checkoutBefore').hidden=false;
+ $('#checkoutDemoFeedback').hidden=true;
+ $('#checkoutDemoPay').disabled=false;
+ $('#checkoutDemoPay').textContent='المتابعة إلى الدفع ←';
+ $$('[data-checkout-scenario]').forEach(button=>{
+  const selected=button.dataset.checkoutScenario===name;
+  button.classList.toggle('is-selected',selected);
+  button.setAttribute('aria-pressed',String(selected));
+ });
+}
+$$('[data-checkout-scenario]').forEach(button=>button.addEventListener('click',()=>selectCheckoutScenario(button.dataset.checkoutScenario)));
+$('#checkoutDemoPay').addEventListener('click',()=>{
+ const suspicious=checkoutExamples[checkoutScenario].alert;
+ $('#checkoutBefore').hidden=true;
+ const panel=$('#checkoutDemoFeedback');
+ panel.hidden=false;
+ panel.classList.toggle('is-warning',suspicious);
+ panel.classList.toggle('is-neutral',!suspicious);
+ $('#checkoutFeedbackIcon').textContent=suspicious?'⚠️':'🔎';
+ $('#checkoutFeedbackLabel').textContent=suspicious?'تنبيه فطن · اشتباه مرتفع':'نتيجة المقارنة · تحقق إضافي';
+ $('#checkoutFeedbackTitle').textContent=suspicious?'توقّف وتحقّق قبل الدفع':'لا تظهر مؤشرات الانتحال نفسها';
+ $('#checkoutFeedbackText').textContent=suspicious
+ ? 'قبل إدخال بيانات البطاقة، لاحظ فطن أن اسم جهة معروفة يظهر على نطاق غير مطابق عند الانتقال للدفع. تنبهك إضافة المتصفح للتحقق من الموقع قبل المتابعة.'
+ : 'هذه صفحة تسوق توضيحية لا تدّعي الانتماء لجهة مدعومة. لم تُرصد مؤشرات انتحال من هذا النوع عند خطوة الدفع، لكن ذلك لا يضمن سلامة المتجر.';
+ const evidence=$('#checkoutEvidence'); evidence.replaceChildren();
+ const points=suspicious?
+ ['الاسم المعروض: البريد السعودي | سبل','النطاق الظاهر: spl-delivery.example.test، وليس splonline.com.sa','الصفحة تطلب الدفع؛ لا تُدخل بيانات البطاقة قبل التحقق من الجهة الرسمية']:
+ ['الاسم المعروض: متجر تجريبي','النطاق الظاهر: shop.example.test؛ لا يوجد ادّعاء باسم جهة مدعومة','افحص سمعة المتجر وسياسات الدفع قبل إدخال أي بيانات'];
+ for(const line of points){const li=document.createElement('li');li.textContent=line;evidence.append(li)}
+ $('#checkoutDemoPay').disabled=true;
+ $('#checkoutDemoPay').textContent='تم عرض نتيجة الفحص';
+ panel.focus({preventScroll:true});
+ if(window.matchMedia('(max-width:760px)').matches)panel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
+});
+$('#checkoutDemoReset').addEventListener('click',()=>selectCheckoutScenario(checkoutScenario));
+$('#openCheckoutDemo').addEventListener('click',()=>{
+ page('demo');
+ selectCheckoutScenario('suspicious');
+ $('#checkoutDemo').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+});
+
 const demoCases={official:{url:'https://services.kfu.edu.sa/login',title:'جامعة الملك فيصل — تسجيل الدخول',password:true},phishing:{url:'https://spl-delivery.example.test/payment',title:'البريد السعودي | سبل — إكمال التوصيل',payment:true},unknown:{url:'https://unknown.example.test/login',title:'تسجيل الدخول',password:true}};
 $$('[data-demo]').forEach(n=>n.addEventListener('click',()=>{const snapshot=demoCases[n.dataset.demo],d=inspectIdentity(snapshot);d.demo=true;d.checked_url=snapshot.url;d.checked_at=new Date().toISOString();last=d;renderResult(d,'#demoResult');makeReport(d);$('#demoResult').scrollIntoView({behavior:'smooth',block:'start'});}));
 for(const b of FATIN_REGISTRY){const row=el('div',undefined,'indicator');row.append(el('strong',b.name),el('p','النطاق: '+b.domains.join('، ')+' · آخر مراجعة: '+b.reviewed,'evidence'));const a=el('a','مصدر القائمة الرسمية ↗');a.href=b.source;a.target='_blank';a.rel='noopener noreferrer';row.append(a);$('#registryList').append(row);}
