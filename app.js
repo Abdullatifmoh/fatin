@@ -56,6 +56,60 @@ $('#closeCallDemo')?.addEventListener('click',()=>$('#callDemoDialog').close());
 $('#closeDialog').addEventListener('click',()=>$('#installDialog').close());
 stats();health();
 
+
+// Scan a user-supplied checkout URL in place, without visiting the site or collecting payment fields.
+$('#checkoutUrlForm').addEventListener('submit',async(event)=>{
+ event.preventDefault();
+ const error=$('#checkoutUrlError'), result=$('#checkoutUrlResult'), submit=$('#checkoutUrlSubmit');
+ error.hidden=true;error.textContent='';result.hidden=true;result.replaceChildren();
+ const raw=$('#checkoutUrlValue').value.trim();
+ let parsed;
+ try{
+   parsed=new URL(raw);
+   if(!['http:','https:'].includes(parsed.protocol)||!parsed.hostname||parsed.username||parsed.password)throw Error();
+ }catch{
+   error.textContent='أدخل رابط موقع صحيح يبدأ بـ https:// أو http:// دون بيانات دخول.';
+   error.hidden=false;return;
+ }
+ if(!$('#checkoutUrlConsent').checked){error.textContent='يرجى الموافقة على إرسال الرابط قبل الفحص.';error.hidden=false;return;}
+ submit.disabled=true;submit.textContent='جارٍ فحص الرابط…';
+ try{
+   const brand=$('#checkoutUrlBrand').value.trim();
+   const body={kind:'url',value:raw,ai_consent:true};
+   // The page's brand and presence of payment fields are user-supplied, never assumed by Fatin.
+   if(brand){body.title=brand;body.payment=$('#checkoutUrlPayment').checked;}
+   const data=await api('analyze',body);
+   last=data;makeReport(data);
+   const risk=data.risk;
+   const badge=el('span',riskNames[risk]||'نتيجة غير حاسمة','badge risk-'+risk);
+   result.append(badge,el('h3','نتيجة فحص رابط المتجر'),el('p',data.summary||'تم فحص الرابط وفق المؤشرات المتاحة.','checkout-url-summary'));
+   if(data.identity?.domain){result.append(el('p','النطاق: '+data.identity.domain,'checkout-url-domain'));}
+   if(Array.isArray(data.indicators)&&data.indicators.length){
+     const details=el('div',undefined,'checkout-url-indicators');
+     for(const item of data.indicators.slice(0,5)){
+       const row=el('div',undefined,'checkout-url-indicator');row.append(el('strong',item.title),el('p',item.explanation||item.evidence||''));details.append(row);
+     }
+     result.append(details);
+   }
+   if(Array.isArray(data.actions)&&data.actions.length){
+     const title=el('h4','ماذا تفعل قبل الدفع؟'),list=el('ul');
+     for(const a of data.actions.slice(0,4)){list.append(el('li',a));}
+     result.append(title,list);
+   }
+   result.append(el('p','فحص الرابط لا يعني فحص محتوى الصفحة الحقيقية، وغياب مؤشرات الاشتباه لا يثبت أمان المتجر.','checkout-url-limits'));
+   const full=el('button','عرض الفحص التفصيلي','secondary');full.type='button';full.addEventListener('click',()=>{
+      $('#urlValue').value=raw;$('#claimTitle').value=brand;$('#claimPayment').checked=$('#checkoutUrlPayment').checked;
+      setKind('url');page('scan');renderResult(data);
+   });
+   result.append(full);
+   result.hidden=false;
+   result.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
+ }catch(err){
+   error.textContent=err.message||'تعذر الاتصال بخادم الفحص. حاول من جديد.';
+   error.hidden=false;
+ }finally{submit.disabled=false;submit.textContent='🔍 افحص الموقع';}
+});
+
 // Interactive checkout walkthrough. No payment inputs, no navigation to a checkout and no real card processing.
 const checkoutExamples={
  suspicious:{title:'سبل | رسوم توصيل',url:'https://spl-delivery.example.test/payment',item:'رسوم توصيل شحنة',price:'14.90 ر.س',alert:true},

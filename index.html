@@ -32,6 +32,28 @@
     </div>
     <span class="checkout-lab-count">خطوتان فقط</span>
   </div>
+
+  <section class="checkout-url-check" aria-labelledby="checkoutUrlTitle">
+    <div class="checkout-url-intro">
+      <span aria-hidden="true" class="checkout-url-icon">🔗</span>
+      <div>
+        <h3 id="checkoutUrlTitle">افحص رابط موقع قبل الدفع</h3>
+        <p>انسخ رابط المتجر أو صفحة الدفع والصقه هنا. يفحص فطن مؤشرات الرابط والجهة المعلنة، دون فتح الموقع أو قراءة بيانات بطاقتك.</p>
+      </div>
+    </div>
+    <form id="checkoutUrlForm" class="checkout-url-form">
+      <label for="checkoutUrlValue">رابط المتجر أو صفحة الدفع</label>
+      <div class="checkout-url-line"><input id="checkoutUrlValue" type="url" inputmode="url" dir="ltr" autocomplete="url" spellcheck="false" required maxlength="2048" placeholder="https://example.com/checkout" aria-describedby="checkoutUrlHelp"/><button id="checkoutUrlSubmit" class="primary" type="submit">🔍 افحص الموقع</button></div>
+      <label for="checkoutUrlBrand">اسم المتجر أو الجهة الظاهر في الصفحة <span class="checkout-optional">(اختياري)</span></label>
+      <input id="checkoutUrlBrand" maxlength="300" placeholder="مثال: سبل – دفع رسوم التوصيل" />
+      <label class="check checkout-url-checkline"><input id="checkoutUrlPayment" type="checkbox"/><span>الصفحة تطلب بيانات بطاقة الدفع أو تعرض نموذج دفع</span></label>
+      <label class="check checkout-url-checkline"><input id="checkoutUrlConsent" type="checkbox" required/><span>أوافق على إرسال الرابط والمعلومات التي أدخلتها إلى خادم فطن للتحليل، وقد يُستخدم Gemini عند توفره.</span></label>
+      <small id="checkoutUrlHelp">هذا فحص للرابط والمعلومات التي تكتبها فقط؛ لا يستطيع الموقع وحده معاينة صفحة متجر خارجي أو ضمان سلامته. لا تدخل كلمات المرور أو أرقام البطاقات هنا.</small>
+      <p id="checkoutUrlError" role="alert" class="checkout-url-error" hidden></p>
+    </form>
+    <div id="checkoutUrlResult" class="checkout-url-result" role="status" aria-live="polite" hidden></div>
+  </section>
+  <div class="checkout-examples-divider"><span>أو جرّب الأمثلة الجاهزة</span></div>
   <div class="checkout-demo-choices" role="group" aria-label="حالات اختبار الدفع الإلكتروني">
     <button type="button" class="checkout-demo-choice is-selected" data-checkout-scenario="suspicious" aria-pressed="true">⚠️ صفحة دفع مشبوهة</button>
     <button type="button" class="checkout-demo-choice" data-checkout-scenario="ordinary" aria-pressed="false">✓ صفحة شراء دون المؤشرات نفسها</button>
