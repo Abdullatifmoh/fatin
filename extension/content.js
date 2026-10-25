@@ -1,40 +1,58 @@
-'use strict';
-let banner=null;
-function clearBanner(){if(banner){banner.remove();banner=null;}}
-function showBanner(d){
- clearBanner();banner=document.createElement('div');banner.dataset.fatinBanner='true';
- banner.style.cssText='position:fixed;top:12px;left:12px;right:12px;z-index:2147483647;';
- const root=banner.attachShadow({mode:'closed'}),style=document.createElement('style');
- style.textContent='*{box-sizing:border-box}section{direction:rtl;font:14px/1.7 Arial,sans-serif;color:#fff;background:#392260;border:1px solid #b196d1;border-radius:13px;box-shadow:0 8px 30px #0004;padding:16px 22px;max-width:850px;margin:auto}header{display:flex;justify-content:space-between;gap:16px}b{font-size:17px}p{margin:8px 0}button,a{font:inherit;border:1px solid #ffffff50;border-radius:6px;padding:5px 10px;background:transparent;color:#fff;cursor:pointer;display:inline-block;margin:4px}ul{margin:8px 0;padding-right:20px}small{color:#e0cfee}';root.append(style);
- const section=document.createElement('section'),head=document.createElement('header'),title=document.createElement('b'),close=document.createElement('button');
- title.textContent='درع فطن · '+(d.risk==='high'?'تحقق قبل إدخال بياناتك':'نطاق يحتاج التحقق');close.textContent='إغلاق';close.onclick=clearBanner;head.append(title,close);
- const para=document.createElement('p');para.textContent=d.summary;section.append(head,para);
- const list=document.createElement('ul');for(const x of (d.indicators||[]).slice(0,4)){const li=document.createElement('li');li.textContent=x.title+': '+x.evidence+' — '+x.explanation;list.append(li);}section.append(list);
- const brand=FATIN_REGISTRY.find(b=>b.id===d.identity?.brand_id);
- if(brand){const link=document.createElement('a');link.href=brand.official_url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='إكمال المهمة عبر '+brand.name;section.append(link);}
- const report=document.createElement('button');report.textContent='تنزيل تقرير المؤشرات';report.onclick=()=>{const clean={checked_url:location.origin+'/',checked_at:new Date().toISOString(),risk:d.risk,indicators:d.indicators,identity:d.identity,limitation:d.limitation};const url=URL.createObjectURL(new Blob([JSON.stringify(clean,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='fatin-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};section.append(report);
- const note=document.createElement('small');note.textContent='لم تُقرأ قيم الحقول. لا يثبت هذا التحذير الاحتيال. '+(d.notice||'');section.append(document.createElement('br'),note);root.append(section);document.documentElement.append(banner);
-}
-chrome.runtime.onMessage.addListener(msg=>{if(msg.type==='fatin-result')showBanner(msg.result);if(msg.type==='fatin-clear')clearBanner();if(msg.type==='fatin-status')window.postMessage({source:'fatin-extension',type:'status',enabled:msg.enabled},location.origin);});
-// Bridge is constrained by the configured dashboard inside the service worker.
-window.addEventListener('message',async e=>{if(e.source!==window||e.origin!==location.origin||e.data?.source!=='fatin-web')return;if(!['get-status','set-protection'].includes(e.data.type))return;try{const r=await chrome.runtime.sendMessage({type:e.data.type,enabled:e.data.enabled});window.postMessage({source:'fatin-extension',type:r.error?'error':'status',message:r.error,enabled:r.enabled},location.origin);}catch{}});
-(async()=>{try{const s=await chrome.storage.local.get('dashboard');if(!s.dashboard)return;const actual=new URL(location.href), expected=new URL(s.dashboard);if(actual.origin===expected.origin&&actual.pathname.replace(/\/$/,'')===expected.pathname.replace(/\/$/,'')){const r=await chrome.runtime.sendMessage({type:'get-status'});window.postMessage({source:'fatin-extension',type:'status',enabled:r.enabled},location.origin);}}catch{}})();
-
-let active=false, previous='', scheduled=null;
-function pageSnapshot(){
- // Only title/heading text and field TYPES. Never read input.value, labels or body text.
- const redact=t=>String(t).replace(/[\w.+-]+@[\w.-]+/g,'[بريد محذوف]').replace(/\d{3,}/g,'[أرقام محذوفة]');
- const u=new URL(location.href);u.search='';u.hash='';u.username='';u.password='';u.pathname='/';
- return {url:u.href,title:redact(document.title).slice(0,300),headings:redact(Array.from(document.querySelectorAll('h1,h2')).slice(0,4).map(n=>n.textContent).join(' ')).slice(0,600),password:!!document.querySelector('input[type="password"]'),payment:!!document.querySelector('input[autocomplete="cc-number"],input[autocomplete="cc-csc"],input[name="cardnumber"],input[name="card_number"]')};
-}
-async function inspectPage(){
- if(!active)return;const snap=pageSnapshot(),key=JSON.stringify(snap);if(key===previous)return;previous=key;
- const local=inspectIdentity(snap);if(['high','medium'].includes(local.risk))showBanner(local);else clearBanner();
- try{const d=await chrome.runtime.sendMessage({type:'scan-page',snapshot:snap});if(!active||previous!==key)return;if(d?.result&&['high','medium'].includes(d.result.risk))showBanner(d.result);if(d?.error&&['high','medium'].includes(local.risk)){local.notice='شرح الخادم غير متاح؛ التنبيه المحلي يعمل.';showBanner(local);}}catch{}
-}
-function queueInspection(){if(!active)return;clearTimeout(scheduled);scheduled=setTimeout(inspectPage,150);}
-new MutationObserver(records=>{if(records.some(r=>!r.target.closest?.('[data-fatin-banner]')))queueInspection();}).observe(document,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['type','autocomplete','name']});
-// Recheck on focus without collecting keystrokes or field values. No forced blocking.
-document.addEventListener('focusin',e=>{if(active&&e.target.matches?.('input[type="password"],input[autocomplete^="cc-"]')){previous='';inspectPage();}},true);
-chrome.runtime.onMessage.addListener(msg=>{if(msg.type==='fatin-status'){active=!!msg.enabled;previous='';if(active)inspectPage();else clearBanner();}});
-(async()=>{try{const r=await chrome.runtime.sendMessage({type:'get-status'});active=!!r.enabled;inspectPage();}catch{}})();
+(() => {
+ 'use strict';
+ // Privacy: no input.value, clipboard, network, DOM text body, or credentials are collected.
+ const REGISTRY = [{"id": "kfu", "name": "جامعة الملك فيصل", "aliases": ["جامعة الملك فيصل", "king faisal university"], "domains": ["kfu.edu.sa"], "official_url": "https://www.kfu.edu.sa/", "source": "https://www.kfu.edu.sa/", "reviewed": "2026-10-05"}, {"id": "spl", "name": "البريد السعودي | سبل", "aliases": ["البريد السعودي", "سبل", "saudi post", "spl online"], "domains": ["splonline.com.sa"], "official_url": "https://splonline.com.sa/ar/", "source": "https://splonline.com.sa/ar/", "reviewed": "2026-10-05"}];
+ let enabled = false;
+ let banner = null;
+ let lastSignature = '';
+ let updateTimer = null;
+ const normal = s => String(s||'').toLocaleLowerCase().normalize('NFKC');
+ const isDomain = (host, root) => host === root || host.endsWith('.'+root);
+ function inspectPage(){
+   const host = location.hostname.toLowerCase();
+   const heading = [...document.querySelectorAll('h1,h2')].slice(0,4).map(x=>x.textContent.slice(0,150)).join(' ');
+   const title = normal(document.title+' '+heading);
+   const password = !!document.querySelector('input[type="password"],input[autocomplete="current-password"],input[autocomplete="new-password"]');
+   const payment = !!document.querySelector('input[autocomplete^="cc-"],input[name="cardnumber"],input[id="cardNumber"]');
+   const matches=REGISTRY.filter(b=>b.aliases.some(a=>title.includes(normal(a))));
+   const claimed=matches.length===1 ? matches[0] : null;
+   if(claimed && !claimed.domains.some(d=>isDomain(host,d)) && (password || payment)){
+     return {severity:'high', title:'انتبه! ربما يوجد انتحال جهة', message:'تظهر الصفحة باسم «'+claimed.name+'» لكن النطاق '+host+' غير موجود في قائمة نطاقاتها، وتطلب '+(password?'بيانات دخول':'بيانات دفع')+'. لا تدخل بياناتك قبل التأكد.', official:claimed.official_url};
+   }
+   if(location.protocol==='http:' && (password || payment)){
+     return {severity:'high',title:'تنبيه: إدخال بيانات على اتصال غير مشفّر',message:'الصفحة تطلب بيانات حساسة عبر HTTP. تحقق من الرابط قبل المتابعة.',official:''};
+   }
+   if(host.includes('xn--') && (password || payment)){
+     return {severity:'medium',title:'تنبيه: تحقق من تهجئة الموقع',message:'النطاق يستخدم ترميزًا دوليًا ويطلب بيانات حساسة. قد يكون مشروعًا، لكن تأكد من اسم الجهة.',official:''};
+   }
+   return null;
+ }
+ function clearBanner(){if(banner){banner.remove();banner=null;}chrome.runtime.sendMessage({type:'FATIN_RISK',risk:false}).catch(()=>{});lastSignature='';}
+ function warn(info){
+   const signature=info.title+'|'+info.message;
+   if(signature===lastSignature&&banner)return;
+   if(banner)banner.remove();lastSignature=signature;
+   banner=document.createElement('section');banner.id='fatin-warning-banner';
+   Object.assign(banner.style,{position:'fixed',top:'12px',left:'12px',right:'12px',zIndex:'2147483647',boxSizing:'border-box',background:'#301959',color:'#fff',fontFamily:'Tahoma,Arial,sans-serif',fontSize:'16px',border:'3px solid #fbad65',borderRadius:'16px',padding:'18px',direction:'rtl',textAlign:'right',boxShadow:'0 9px 35px #0006',lineHeight:'1.8'});
+   banner.setAttribute('role','alert');banner.setAttribute('aria-live','assertive');
+   const heading=document.createElement('strong');heading.textContent='🛡️ درع فطن — '+info.title;
+   heading.style.fontSize='19px';
+   const p=document.createElement('p');p.textContent=info.message;p.style.margin='7px 0';
+   const note=document.createElement('small');note.textContent='فحص قواعد محليّ: هذا مؤشر يستدعي التحقق، وليس إثباتًا على أن الموقع خبيث. لا نقرأ كلمات المرور أو قيم الحقول.';note.style.display='block';
+   const close=document.createElement('button');close.textContent='فهمت، إغلاق التحذير';close.type='button';
+   Object.assign(close.style,{marginTop:'12px',fontSize:'15px',padding:'9px 14px',cursor:'pointer',border:'none',borderRadius:'9px',background:'#fff',color:'#301959'});
+   close.addEventListener('click',()=>{banner?.remove();banner=null;});
+   banner.append(heading,p,note,close);
+   if(info.official){const a=document.createElement('a');a.href=info.official;a.textContent='فتح الموقع الرسمي ↗';a.target='_blank';a.rel='noopener noreferrer';Object.assign(a.style,{display:'inline-block',padding:'8px',color:'#d2ffed'});banner.append(a);}
+   (document.body||document.documentElement).append(banner);
+   chrome.runtime.sendMessage({type:'FATIN_RISK',risk:true}).catch(()=>{});
+ }
+ function assess(){if(!enabled){clearBanner();return;}const info=inspectPage();if(info)warn(info);else clearBanner();}
+ function schedule(){clearTimeout(updateTimer);updateTimer=setTimeout(assess,500);}
+ chrome.storage.local.get({protectionEnabled:false}, data=>{enabled=data.protectionEnabled===true;assess();});
+ chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local' && changes.protectionEnabled){enabled=changes.protectionEnabled.newValue===true;schedule();}});
+ // Only observe structural changes, never the typed field values.
+ new MutationObserver(mutations=>{if(mutations.some(m=>m.type==='childList'||m.attributeName==='type'||m.attributeName==='autocomplete'))schedule();})
+   .observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['type','autocomplete']});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
+})();

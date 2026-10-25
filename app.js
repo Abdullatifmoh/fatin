@@ -30,37 +30,31 @@ $$('[data-question]').forEach(n=>n.addEventListener('click',()=>{$('#question').
 $('#chatForm').addEventListener('submit',async e=>{e.preventDefault();if(!$('#chatConsent').checked)return;const msg=$('#question').value.trim();if(!msg)return;$('#chatError').textContent='';$('#chatBtn').disabled=true;bubble(msg,'user');$('#question').value='';const pending=bubble('جارٍ التفكير…','assistant');try{const d=await api('chat',{message:msg,ai_consent:true,context:last?JSON.stringify(last):''});pending.querySelector('.bubble-content').textContent=d.response;addSpeakButton(pending,pending.querySelector('.bubble-content'));}catch(e){pending.querySelector('.bubble-content').textContent='تعذر الرد الآن.';$('#chatError').textContent=e.message;}finally{$('#chatBtn').disabled=false}});
 $('#server').value=base;$('#token').value=token;
 $('#saveSettings').addEventListener('click',async()=>{let v=$('#server').value.trim().replace(/\/$/,'');try{if(v){const u=new URL(v);if(u.protocol!=='https:'&&!(['localhost','127.0.0.1'].includes(u.hostname)&&u.protocol==='http:'))throw Error('استخدم HTTPS، أو HTTP للتشغيل المحلي فقط.');if(u.username||u.password||u.search||u.hash)throw Error('أدخل عنوان الخادم دون بيانات دخول أو معاملات.');}base=v;token=$('#token').value.trim();localStorage.setItem('fatin-server',base);sessionStorage.setItem('fatin-token',token);$('#settingsStatus').textContent=(await health())?'تم حفظ الإعدادات والاتصال بالخادم.':'حُفظت الإعدادات؛ تعذر الاتصال بالخادم.';}catch(e){$('#settingsStatus').textContent=e.message;}});
+// Interactive VPN-like PRESENTATION ONLY — no OS protection, VPN or extension is toggled here.
 const treePanel=$('#protectionTree');
-function showProtectionTree(message){treePanel.hidden=false;$('#protection').setAttribute('aria-expanded','true');if(message)$('#treeState').textContent=message;}
-function protectionState(enabled){
- protectionEnabled=enabled;
- $('#protection').textContent=enabled?'✓ الحماية مفعّلة · إيقافها':'⬡ تفعيل الحماية';
- $('#protectionStatus').textContent=enabled?'✓ حماية التصفح مفعّلة في إضافة Chrome/Edge. التنبيهات تتعلق بمؤشرات محددة ولا تعني مراقبة المكالمات أو كل التطبيقات.':extensionReady?'الإضافة متصلة، لكن الحماية متوقفة. اضغط الزر لتفعيل فحص النطاقات أثناء التصفح.':'حماية التصفح غير مفعّلة بعد. اضغط الزر لعرض الشجرة وتنزيل إضافة الكمبيوتر.';
- $('#extensionSetup').hidden=extensionReady; if(enabled)showProtectionTree('✓ إضافة المتصفح متصلة والحماية مفعّلة. يمكنك فتح أي فرع للفحص عند الطلب.');
+let demoProtectionOn=false;
+function updateProtectionDemo(on,{scroll=false}={}){
+ demoProtectionOn=Boolean(on);
+ const button=$('#protection'), hero=$('#protectionHero');
+ hero.classList.toggle('vpn-demo-on',demoProtectionOn);
+ button.setAttribute('aria-pressed',String(demoProtectionOn));
+ button.setAttribute('aria-expanded',String(demoProtectionOn));
+ $('#vpnHeadline').textContent=demoProtectionOn?'وضع العرض قيد التشغيل':'وضع الحماية متوقف';
+ $('#vpnSubline').textContent=demoProtectionOn?'ظهرت فروع الفحص الأربعة — اختر الفرع المناسب':'اضغط الزر لتشاهد الفكرة على جوالك أو اللابتوب';
+ $('#vpnButtonText').textContent=demoProtectionOn?'إيقاف العرض التجريبي':'تشغيل الحماية';
+ $('#vpnConnection').textContent=demoProtectionOn?'● محاكاة مفعّلة':'◯ غير مفعّل';
+ $('#protectionStatus').textContent=demoProtectionOn?'العرض التجريبي يعمل على الشاشة فقط. لم يتم تشغيل VPN أو حماية الخلفية. اختر أحد الفروع للفحص اليدوي.':'نموذج تفاعلي لشرح المشروع. لا يعني تشغيل الزر حماية المكالمات أو التطبيقات أو الجهاز تلقائيًا.';
+ treePanel.hidden=!demoProtectionOn;
+ $('#treeState').textContent=demoProtectionOn?'اختر من الفروع الأربعة لفحص المحتوى داخل فطن. تشغيل الزر استعراضي فقط.':'اختر نوع الفحص المناسب. هذه الفحوص تتم عند الطلب.';
+ const extensionPanel=$('#extensionSetup'); if(extensionPanel)extensionPanel.hidden=true;
+ if(demoProtectionOn&&scroll){treePanel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 }
-window.addEventListener('message',e=>{if(e.source!==window||e.origin!==location.origin||e.data?.source!=='fatin-extension')return;if(e.data.type==='status'){extensionReady=true;protectionState(!!e.data.enabled)}if(e.data.type==='error'){$('#protectionStatus').textContent=e.data.message||'تعذر تفعيل الحماية؛ افتح نافذة الإضافة.';}});
-$('#protection').addEventListener('click',()=>{
- if(isMobileBrowser()){
-  $('#extensionSetup').hidden=true;
-  showProtectionTree('📱 فتح فروع الفحص على الجوال: اضغط أحد الرموز الأربعة. مراقبة المكالمات والتطبيقات تلقائيًا غير متاحة من موقع الويب.');
-  treePanel.scrollIntoView({behavior:'smooth',block:'start'});
-  return;
- }
- if(!extensionReady){
-  showProtectionTree('⚠️ إضافة حماية التصفح غير متصلة. يمكنك استخدام الفحوص الأربعة يدويًا، لكن حماية المواقع تلقائيًا غير مفعّلة.');
-  $('#protectionStatus').textContent='يلزم تثبيت إضافة فطن المتوافقة وتوصيلها حتى تعمل تحذيرات التصفح؛ الزر لم يفعّل مراقبة تلقائية.';
-  $('#extensionSetup').hidden=false;
-  treePanel.scrollIntoView({behavior:'smooth',block:'start'});
-  return;
- }
- const enabled=!protectionEnabled;
- if(enabled&&!confirm('ستفحص إضافة فطن عنوان الصفحة والنطاق وأنواع حقول الدخول أو الدفع محليًا، دون قراءة أو إرسال قيم الحقول أو بيانات تصفحك. هل تود تفعيل التنبيهات؟'))return;
- showProtectionTree(enabled?'جارٍ طلب تفعيل الحماية من الإضافة…':'طلب إيقاف الحماية أُرسل إلى الإضافة. يمكنك متابعة الفحص يدويًا.');
- window.postMessage({source:'fatin-web',type:'set-protection',enabled},location.origin);
- treePanel.scrollIntoView({behavior:'smooth',block:'start'});
-});
+$('#protection').addEventListener('click',()=>updateProtectionDemo(!demoProtectionOn,{scroll:!demoProtectionOn}));
+updateProtectionDemo(false);
+$('#demoIncomingCall')?.addEventListener('click',()=>$('#callDemoDialog').showModal());
+$('#closeCallDemo')?.addEventListener('click',()=>$('#callDemoDialog').close());
 $('#closeDialog').addEventListener('click',()=>$('#installDialog').close());
-window.postMessage({source:'fatin-web',type:'get-status'},location.origin);stats();health();
+stats();health();
 
 const demoCases={official:{url:'https://services.kfu.edu.sa/login',title:'جامعة الملك فيصل — تسجيل الدخول',password:true},phishing:{url:'https://spl-delivery.example.test/payment',title:'البريد السعودي | سبل — إكمال التوصيل',payment:true},unknown:{url:'https://unknown.example.test/login',title:'تسجيل الدخول',password:true}};
 $$('[data-demo]').forEach(n=>n.addEventListener('click',()=>{const snapshot=demoCases[n.dataset.demo],d=inspectIdentity(snapshot);d.demo=true;d.checked_url=snapshot.url;d.checked_at=new Date().toISOString();last=d;renderResult(d,'#demoResult');makeReport(d);$('#demoResult').scrollIntoView({behavior:'smooth',block:'start'});}));
@@ -89,8 +83,6 @@ $('#installFromSettings').addEventListener('click',openMobileDialog);
 $('#closeMobileDialog').addEventListener('click',()=>$('#mobileDialog').close());
 $('#triggerInstall').addEventListener('click',async()=>{if(!installRequest)return;const prompt=installRequest;installRequest=null;$('#triggerInstall').hidden=true;$('#mobileDialog').close();try{await prompt.prompt()}catch{}});
 if(isMobileBrowser()){
- $('#protection').textContent='⬡ افتح فروع الحماية';
- $('#protectionStatus').textContent='على الجوال: يفتح الزر فروع الفحص اليدوي. لا تعمل إضافة Chrome المكتبية في متصفحات الجوال، ولا يمكن للموقع مراقبة المكالمات تلقائيًا.';
  const shared=new URLSearchParams(location.search),value=shared.get('shared_url')||shared.get('text');
  if(value){setKind(/^https?:\/\//i.test(value)?'url':'text');$('#'+kind+'Value').value=value.slice(0,kind==='url'?2048:20000);page('scan');window.history.replaceState(null,'',location.pathname+'#scan');}
  else if(localStorage.getItem('fatin-quick-mobile')==='true'&&!location.hash){page('scan');}

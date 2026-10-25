@@ -1,22 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "درع فطن — حماية التصفح",
-  "version": "2.1.0",
-  "description": "يكشف مؤشرات انتحال جهات محددة وطلب بيانات حساسة دون قراءة قيم الحقول، ويعرض القناة الرسمية.",
+  "name": "درع فطن | حماية التصفح",
+  "version": "1.1.0",
+  "description": "تنبيه محلي عند اجتماع انتحال جهة مع طلب بيانات دخول أو دفع، دون قراءة قيم الحقول.",
   "permissions": [
     "storage",
     "tabs"
   ],
-  "optional_host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
+  "action": {
+    "default_title": "درع فطن: تفعيل الحماية",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "192": "icons/fatin-192.png"
+    }
+  },
   "background": {
     "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "درع فطن"
   },
   "content_scripts": [
     {
@@ -25,10 +24,24 @@
         "https://*/*"
       ],
       "js": [
-        "identity.js",
         "content.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://abdullatifmoh.github.io/fatin/*",
+        "https://fatin.onrender.com/*"
+      ],
+      "js": [
+        "bridge.js"
+      ],
+      "run_at": "document_idle"
     }
-  ]
+  ],
+  "icons": {
+    "192": "icons/fatin-192.png",
+    "128": "icons/fatin-128.png",
+    "48": "icons/fatin-48.png"
+  }
 }
