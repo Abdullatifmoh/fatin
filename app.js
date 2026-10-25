@@ -35,26 +35,29 @@ function showProtectionTree(message){treePanel.hidden=false;$('#protection').set
 function protectionState(enabled){
  protectionEnabled=enabled;
  $('#protection').textContent=enabled?'✓ الحماية مفعّلة · إيقافها':'⬡ تفعيل الحماية';
- $('#protectionStatus').textContent=enabled?'✓ تنبيه التصفح مفعّل في الإضافة المتصلة. تحذيرات فطن محدودة بالجهات والقواعد المدعومة، ولا تشمل التطبيقات أو المكالمات.':'حماية التصفح غير مفعّلة حاليًا؛ يلزم اتصال إضافة فطن على الكمبيوتر.';
- if(enabled)showProtectionTree('✓ إضافة المتصفح متصلة؛ الفحوص الأربعة متاحة أيضًا عند الطلب.');
+ $('#protectionStatus').textContent=enabled?'✓ حماية التصفح مفعّلة في إضافة Chrome/Edge. التنبيهات تتعلق بمؤشرات محددة ولا تعني مراقبة المكالمات أو كل التطبيقات.':extensionReady?'الإضافة متصلة، لكن الحماية متوقفة. اضغط الزر لتفعيل فحص النطاقات أثناء التصفح.':'حماية التصفح غير مفعّلة بعد. اضغط الزر لعرض الشجرة وتنزيل إضافة الكمبيوتر.';
+ $('#extensionSetup').hidden=extensionReady; if(enabled)showProtectionTree('✓ إضافة المتصفح متصلة والحماية مفعّلة. يمكنك فتح أي فرع للفحص عند الطلب.');
 }
 window.addEventListener('message',e=>{if(e.source!==window||e.origin!==location.origin||e.data?.source!=='fatin-extension')return;if(e.data.type==='status'){extensionReady=true;protectionState(!!e.data.enabled)}if(e.data.type==='error'){$('#protectionStatus').textContent=e.data.message||'تعذر تفعيل الحماية؛ افتح نافذة الإضافة.';}});
 $('#protection').addEventListener('click',()=>{
  if(isMobileBrowser()){
-  showProtectionTree('📱 وضع الفحص اليدوي على الجوال: اختر أحد الفروع. هذا لا يراقب المكالمات أو التطبيقات تلقائيًا.');
+  $('#extensionSetup').hidden=true;
+  showProtectionTree('📱 فتح فروع الفحص على الجوال: اضغط أحد الرموز الأربعة. مراقبة المكالمات والتطبيقات تلقائيًا غير متاحة من موقع الويب.');
   treePanel.scrollIntoView({behavior:'smooth',block:'start'});
   return;
  }
  if(!extensionReady){
   showProtectionTree('⚠️ إضافة حماية التصفح غير متصلة. يمكنك استخدام الفحوص الأربعة يدويًا، لكن حماية المواقع تلقائيًا غير مفعّلة.');
   $('#protectionStatus').textContent='يلزم تثبيت إضافة فطن المتوافقة وتوصيلها حتى تعمل تحذيرات التصفح؛ الزر لم يفعّل مراقبة تلقائية.';
-  $('#installDialog').showModal();
+  $('#extensionSetup').hidden=false;
+  treePanel.scrollIntoView({behavior:'smooth',block:'start'});
   return;
  }
  const enabled=!protectionEnabled;
- if(enabled&&!confirm('سترسل إضافة فطن عنوان الموقع وعنوان الصفحة وأول عناوينها وأنواع حقول الدخول أو الدفع دون قيم الحقول، وقد تستخدم خدمة التحليل وفق إعداداتك. هل توافق؟'))return;
+ if(enabled&&!confirm('ستفحص إضافة فطن عنوان الصفحة والنطاق وأنواع حقول الدخول أو الدفع محليًا، دون قراءة أو إرسال قيم الحقول أو بيانات تصفحك. هل تود تفعيل التنبيهات؟'))return;
  showProtectionTree(enabled?'جارٍ طلب تفعيل الحماية من الإضافة…':'طلب إيقاف الحماية أُرسل إلى الإضافة. يمكنك متابعة الفحص يدويًا.');
  window.postMessage({source:'fatin-web',type:'set-protection',enabled},location.origin);
+ treePanel.scrollIntoView({behavior:'smooth',block:'start'});
 });
 $('#closeDialog').addEventListener('click',()=>$('#installDialog').close());
 window.postMessage({source:'fatin-web',type:'get-status'},location.origin);stats();health();

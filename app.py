@@ -325,7 +325,7 @@ def home():
 
 @app.get("/<filename>")
 def frontend_asset(filename):
-    if filename not in {"style.css", "app.js", "identity.js", "voice.js", "audio-scan.js", "official-verify.js", "index.html", "manifest.webmanifest", "service-worker.js"}:
+    if filename not in {"style.css", "app.js", "identity.js", "voice.js", "audio-scan.js", "official-verify.js", "index.html", "manifest.webmanifest", "service-worker.js", "fatin-extension.zip"}:
         return jsonify(error="الصفحة غير موجودة."), 404
     response = app.send_static_file(filename)
     if filename == "service-worker.js":
