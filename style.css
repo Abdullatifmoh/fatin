@@ -65,3 +65,24 @@ button{touch-action:manipulation}
 .official-manual input{max-width:650px}.official-result{background:#f9f6ff;border:1px solid #e4d9f1;border-radius:14px;padding:19px;margin-top:22px}
 .official-result>strong{font-size:18px}.official-result>p{font-size:14px;margin:8px 0}.official-result small{line-height:1.7}
 @media(max-width:760px){.official-home{align-items:stretch}.official-home .official-badge{white-space:normal}.official-home button{width:100%}.official-actions{flex-direction:column}.official-actions>*{width:100%;font-size:16px}.official-steps>div{font-size:15px}.official-result{padding:15px}}
+
+/* Unified accessible scanner and compact controls (October 2026). */
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.header-install,.header-voice{padding:10px 15px;min-height:44px;font:inherit;font-size:13px;font-weight:700;border-radius:12px;border:1px solid #dacded;background:#fff;color:#563396;cursor:pointer;white-space:nowrap}
+.header-install{background:#643fae;color:#fff;border-color:#643fae}
+.header-install:hover,.header-voice:hover{filter:brightness(.95)}
+.unified-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:16px 0 10px}
+.unified-card{border:1px solid #e2d7ed;border-radius:20px;padding:23px 17px;min-height:210px;background:#fff;text-align:right;color:#241933;display:flex;flex-direction:column;align-items:flex-start;gap:12px;cursor:pointer;font-family:inherit;transition:transform .16s,border-color .16s,box-shadow .16s}
+.unified-card:hover{transform:translateY(-3px);border-color:#936fc7;box-shadow:0 8px 26px #3d2a6614}
+.unified-card:focus-visible{outline:3px solid #9875d6;outline-offset:2px}
+.unified-card .feature-symbol{display:grid;place-items:center;background:#f1ebf9;border-radius:14px;width:51px;height:51px;font-size:25px}
+.unified-card strong{font-size:19px}.unified-card small{font-size:13px;line-height:1.8;color:#756981}
+.quick-clarification{font-size:12px;color:#766b81;margin-bottom:25px}
+.image-info,.origin-panel{padding:16px;border:1px solid #ded4ef;border-radius:13px;background:#f8f5fd;margin:16px 0}
+.image-info strong,.origin-panel strong{display:block;font-size:15px;color:#4b307b}
+.image-info p,.origin-panel p{font-size:13px;line-height:1.8;margin:9px 0}
+.origin-panel small{font-size:12px;color:#6b5b79}
+.mobile-preference{padding:12px 0}
+@media(max-width:1100px){.unified-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.header-actions{gap:5px}.header-install,.header-voice{min-height:42px;font-size:12px;padding:7px 10px}.header-actions .badge{max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}header{height:auto;min-height:72px;flex-wrap:wrap;padding-top:9px;padding-bottom:9px;gap:7px}.unified-card{min-height:165px;padding:17px 14px;gap:7px}.unified-card strong{font-size:16px}.unified-card small{font-size:12px}.unified-card .feature-symbol{width:44px;height:44px}.quick-clarification{line-height:1.8}}
+@media(max-width:390px){.unified-grid{grid-template-columns:1fr}.unified-card{min-height:125px}}

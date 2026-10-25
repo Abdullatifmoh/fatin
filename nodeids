@@ -1,0 +1,12 @@
+[
+  "tests/test_audio.py::test_assets",
+  "tests/test_audio.py::test_audio_gemini_mock",
+  "tests/test_audio.py::test_audio_no_fake_rule_analysis",
+  "tests/test_audio.py::test_audio_rejects_non_audio",
+  "tests/test_audio.py::test_audio_requires_explicit_consent",
+  "tests/test_voice_mobile.py::test_pwa_artifacts_exist",
+  "tests/test_voice_mobile.py::test_root_routes_pwa_assets",
+  "tests/test_voice_mobile.py::test_voice_endpoint_returns_audio",
+  "tests/test_voice_mobile.py::test_voice_rejects_long_text",
+  "tests/test_voice_mobile.py::test_voice_requires_consent"
+]
