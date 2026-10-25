@@ -194,3 +194,17 @@ button{touch-action:manipulation}
  .tree-foot-actions button{width:100%}
  .demo-tree-notice{font-size:12px}
 }
+
+/* Checkout safety is a supporting use case inside the existing four-branch tree. */
+.checkout-alert-guide{margin:18px 0;padding:21px 24px;background:linear-gradient(120deg,#fff9ed,#faf5ff);border:1px solid #e8d4ab;border-radius:18px;box-shadow:0 5px 20px #3c215108}
+.checkout-alert-heading{display:flex;align-items:flex-start;gap:15px}
+.checkout-cart{font-size:30px;line-height:1.2;background:#fff2d8;border-radius:14px;padding:10px;flex-shrink:0}
+.checkout-alert-guide h3{font-size:20px;color:#2f2050;margin:0 0 5px}
+.checkout-alert-guide p{font-size:14px;color:#594d6d;margin:0;line-height:1.85}
+.checkout-alert-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px}
+.checkout-alert-actions span{font-size:12px;color:#6e5f7f;flex:1;min-width:190px}
+.checkout-alert-actions button{white-space:normal;text-align:center;min-height:44px}
+.field-study-note{margin:18px 0;display:flex;align-items:flex-start;gap:16px;border-right:5px solid #6340ad;background:#fdfcff}
+.field-study-icon{font-size:30px;background:#eee7f8;border-radius:14px;padding:9px 14px;flex-shrink:0}
+.field-study-note h2{font-size:20px;margin:0 0 8px}.field-study-note p{margin-bottom:8px}
+@media(max-width:680px){.checkout-alert-guide{padding:16px}.checkout-alert-guide h3{font-size:18px}.checkout-alert-guide p{font-size:14px}.checkout-alert-actions button{width:100%}.field-study-note{padding:18px;gap:10px}.field-study-icon{font-size:22px;padding:7px}}
