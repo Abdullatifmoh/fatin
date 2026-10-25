@@ -30,22 +30,22 @@ $$('[data-question]').forEach(n=>n.addEventListener('click',()=>{$('#question').
 $('#chatForm').addEventListener('submit',async e=>{e.preventDefault();if(!$('#chatConsent').checked)return;const msg=$('#question').value.trim();if(!msg)return;$('#chatError').textContent='';$('#chatBtn').disabled=true;bubble(msg,'user');$('#question').value='';const pending=bubble('جارٍ التفكير…','assistant');try{const d=await api('chat',{message:msg,ai_consent:true,context:last?JSON.stringify(last):''});pending.querySelector('.bubble-content').textContent=d.response;addSpeakButton(pending,pending.querySelector('.bubble-content'));}catch(e){pending.querySelector('.bubble-content').textContent='تعذر الرد الآن.';$('#chatError').textContent=e.message;}finally{$('#chatBtn').disabled=false}});
 $('#server').value=base;$('#token').value=token;
 $('#saveSettings').addEventListener('click',async()=>{let v=$('#server').value.trim().replace(/\/$/,'');try{if(v){const u=new URL(v);if(u.protocol!=='https:'&&!(['localhost','127.0.0.1'].includes(u.hostname)&&u.protocol==='http:'))throw Error('استخدم HTTPS، أو HTTP للتشغيل المحلي فقط.');if(u.username||u.password||u.search||u.hash)throw Error('أدخل عنوان الخادم دون بيانات دخول أو معاملات.');}base=v;token=$('#token').value.trim();localStorage.setItem('fatin-server',base);sessionStorage.setItem('fatin-token',token);$('#settingsStatus').textContent=(await health())?'تم حفظ الإعدادات والاتصال بالخادم.':'حُفظت الإعدادات؛ تعذر الاتصال بالخادم.';}catch(e){$('#settingsStatus').textContent=e.message;}});
-// Interactive VPN-like PRESENTATION ONLY — no OS protection, VPN or extension is toggled here.
+// Toggle the availability panel for on-demand checks; this does not activate OS-level monitoring.
 const treePanel=$('#protectionTree');
 let demoProtectionOn=false;
 function updateProtectionDemo(on,{scroll=false}={}){
  demoProtectionOn=Boolean(on);
  const button=$('#protection'), hero=$('#protectionHero');
- hero.classList.toggle('vpn-demo-on',demoProtectionOn);
+ hero.classList.toggle('fatin-demo-on',demoProtectionOn);
  button.setAttribute('aria-pressed',String(demoProtectionOn));
  button.setAttribute('aria-expanded',String(demoProtectionOn));
- $('#vpnHeadline').textContent=demoProtectionOn?'وضع العرض قيد التشغيل':'وضع الحماية متوقف';
- $('#vpnSubline').textContent=demoProtectionOn?'ظهرت فروع الفحص الأربعة — اختر الفرع المناسب':'اضغط الزر لتشاهد الفكرة على جوالك أو اللابتوب';
- $('#vpnButtonText').textContent=demoProtectionOn?'إيقاف العرض التجريبي':'تشغيل الحماية';
- $('#vpnConnection').textContent=demoProtectionOn?'● محاكاة مفعّلة':'◯ غير مفعّل';
- $('#protectionStatus').textContent=demoProtectionOn?'العرض التجريبي يعمل على الشاشة فقط. لم يتم تشغيل VPN أو حماية الخلفية. اختر أحد الفروع للفحص اليدوي.':'نموذج تفاعلي لشرح المشروع. لا يعني تشغيل الزر حماية المكالمات أو التطبيقات أو الجهاز تلقائيًا.';
+ $('#fatinHeadline').textContent=demoProtectionOn?'فطن جاهز للفحص':'وضع فطن غير مشغّل';
+ $('#fatinSubline').textContent=demoProtectionOn?'اختر أحد الفروع الأربعة لبدء الفحص':'اضغط لعرض أدوات الفحص على الجوال أو الكمبيوتر';
+ $('#fatinButtonText').textContent=demoProtectionOn?'إغلاق أدوات الفحص':'تفعيل فطن';
+ $('#fatinConnection').textContent=demoProtectionOn?'● أدوات الفحص جاهزة':'◯ جاهز للبدء';
+ $('#protectionStatus').textContent=demoProtectionOn?'اختر ما تريد التحقق منه، ثم أرسل الرابط أو الرسالة أو الملف أو التسجيل لفحصه داخل فطن.':'اضغط لتظهر فروع الفحص. فطن يفحص المحتوى الذي تختاره، ولا يراقب الجهاز أو المكالمات تلقائيًا.';
  treePanel.hidden=!demoProtectionOn;
- $('#treeState').textContent=demoProtectionOn?'اختر من الفروع الأربعة لفحص المحتوى داخل فطن. تشغيل الزر استعراضي فقط.':'اختر نوع الفحص المناسب. هذه الفحوص تتم عند الطلب.';
+ $('#treeState').textContent=demoProtectionOn?'اختر من الفروع الأربعة للبدء بفحص محتواك.':'اختر نوع الفحص المناسب. الفحص يبدأ بطلبك.';
  const extensionPanel=$('#extensionSetup'); if(extensionPanel)extensionPanel.hidden=true;
  if(demoProtectionOn&&scroll){treePanel.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 }

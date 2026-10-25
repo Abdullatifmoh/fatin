@@ -1,5 +1,5 @@
 "use strict";
-const VERSION="fatin-mobile-v6-vpn-concept";
+const VERSION="fatin-mobile-v7-clear-copy";
 const SHELL=["./", "./index.html", "./style.css", "./identity.js", "./voice.js", "./app.js", "./audio-scan.js", "./official-verify.js", "./manifest.webmanifest", "./icons/fatin-192.png", "./icons/fatin-512.png"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==VERSION&&key.startsWith("fatin-mobile-")).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

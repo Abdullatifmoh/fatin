@@ -149,28 +149,28 @@ button{touch-action:manipulation}
 .extension-setup{display:flex;align-items:center;gap:22px;justify-content:space-between;border:2px solid #caa5ef;background:#faf5ff;padding:18px;margin:15px 0;border-radius:16px}.extension-setup[hidden]{display:none!important}.extension-setup>div{flex:1}.extension-setup strong{font-size:17px}.extension-setup p{font-size:13px;line-height:1.8;margin:7px 0}.extension-setup a{white-space:normal;text-align:center;min-width:210px;line-height:1.7}.tree-quick-verify{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0}.tree-quick-verify span{font-weight:800;color:#412776}.tree-quick-verify button{border:1px solid #ccb8eb;border-radius:13px;background:#f3ecfb;color:#4c2d85;padding:11px 14px;min-height:47px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}.tree-quick-verify button:hover{background:#e5d8f6}.tree-quick-verify button:focus-visible{outline:3px solid #6b48af}@media(max-width:700px){.extension-setup{display:block}.extension-setup>a{display:block;margin-top:12px}.tree-quick-verify{display:grid;grid-template-columns:1fr 1fr}.tree-quick-verify span{grid-column:1/-1}.tree-quick-verify button{min-height:54px}}
 
 
-/* VPN-style concept demonstrator. This toggles presentation only, not device protection. */
-.vpn-hero{transition:background .35s ease,border-color .35s ease}
-.vpn-hero.vpn-demo-on{background:linear-gradient(115deg,#1d3c43 0%,#296b63 48%,#5f3ead 100%)!important;border-color:#9be4c6!important}
-.vpn-control{max-width:530px;border:1px solid #ffffff42;background:rgba(17,9,38,.2);border-radius:25px;padding:19px 20px;margin-top:22px;box-shadow:0 14px 45px #00000018}
-.vpn-control-top{display:flex;gap:12px;align-items:center;margin-bottom:13px}
-.vpn-control-top>div{flex:1;min-width:0}
-.vpn-control-top strong{display:block;font-size:20px;color:#fff;line-height:1.3}
-.vpn-control-top small{font-size:12px;color:#e5dafa;line-height:1.65}
-.vpn-current-dot{display:inline-block;width:14px;height:14px;flex-shrink:0;border-radius:50%;background:#b4a5cd;box-shadow:0 0 0 5px #ffffff12;transition:background .2s,box-shadow .2s}
-.vpn-demo-on .vpn-current-dot{background:#84f5bc;box-shadow:0 0 0 6px #7befb123,0 0 18px #83f7a5}
-.vpn-demo-label{font-size:11px;color:#fff;border:1px solid #ffffff63;background:#ffffff14;padding:6px 9px;border-radius:40px;white-space:nowrap}
-#protection.vpn-power-button{min-height:94px;width:100%;border:2px solid transparent;border-radius:20px;background:#fff;color:#432075;font-family:inherit;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;cursor:pointer;transition:background .2s,transform .2s}
-#protection.vpn-power-button:hover{transform:translateY(-1px)}
-#protection.vpn-power-button:focus-visible{outline:4px solid #c9fce0;outline-offset:4px}
-.vpn-power-icon{font-size:36px;line-height:1}
-.vpn-toggle{display:block;flex-shrink:0;margin-right:auto;width:66px;height:38px;border-radius:28px;background:#bfb8ce;padding:5px;direction:ltr;transition:background .2s}
-.vpn-toggle-knob{display:block;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 7px #0002;transition:transform .24s}
-.vpn-demo-on .vpn-toggle{background:#177e65}
-.vpn-demo-on .vpn-toggle-knob{transform:translateX(28px)}
-.vpn-demo-on #protection.vpn-power-button{background:#d8ffea;color:#145a43}
-.vpn-control-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#e6ddf7;font-size:13px;margin-top:13px}
-.vpn-demo-on .vpn-control-foot span:first-child{color:#adffd3;font-weight:800}
+/* Fatin switch enables manual scan panel, not device-wide protection. */
+.fatin-hero{transition:background .35s ease,border-color .35s ease}
+.fatin-hero.fatin-demo-on{background:linear-gradient(115deg,#1d3c43 0%,#296b63 48%,#5f3ead 100%)!important;border-color:#9be4c6!important}
+.fatin-control{max-width:530px;border:1px solid #ffffff42;background:rgba(17,9,38,.2);border-radius:25px;padding:19px 20px;margin-top:22px;box-shadow:0 14px 45px #00000018}
+.fatin-control-top{display:flex;gap:12px;align-items:center;margin-bottom:13px}
+.fatin-control-top>div{flex:1;min-width:0}
+.fatin-control-top strong{display:block;font-size:20px;color:#fff;line-height:1.3}
+.fatin-control-top small{font-size:12px;color:#e5dafa;line-height:1.65}
+.fatin-current-dot{display:inline-block;width:14px;height:14px;flex-shrink:0;border-radius:50%;background:#b4a5cd;box-shadow:0 0 0 5px #ffffff12;transition:background .2s,box-shadow .2s}
+.fatin-demo-on .fatin-current-dot{background:#84f5bc;box-shadow:0 0 0 6px #7befb123,0 0 18px #83f7a5}
+.fatin-demo-label{font-size:11px;color:#fff;border:1px solid #ffffff63;background:#ffffff14;padding:6px 9px;border-radius:40px;white-space:nowrap}
+#protection.fatin-power-button{min-height:94px;width:100%;border:2px solid transparent;border-radius:20px;background:#fff;color:#432075;font-family:inherit;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;cursor:pointer;transition:background .2s,transform .2s}
+#protection.fatin-power-button:hover{transform:translateY(-1px)}
+#protection.fatin-power-button:focus-visible{outline:4px solid #c9fce0;outline-offset:4px}
+.fatin-power-icon{font-size:36px;line-height:1}
+.fatin-toggle{display:block;flex-shrink:0;margin-right:auto;width:66px;height:38px;border-radius:28px;background:#bfb8ce;padding:5px;direction:ltr;transition:background .2s}
+.fatin-toggle-knob{display:block;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 7px #0002;transition:transform .24s}
+.fatin-demo-on .fatin-toggle{background:#177e65}
+.fatin-demo-on .fatin-toggle-knob{transform:translateX(28px)}
+.fatin-demo-on #protection.fatin-power-button{background:#d8ffea;color:#145a43}
+.fatin-control-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#e6ddf7;font-size:13px;margin-top:13px}
+.fatin-demo-on .fatin-control-foot span:first-child{color:#adffd3;font-weight:800}
 #protectionStatus{margin-top:13px;max-width:540px;color:#f3eaf9;font-size:12px;line-height:1.8}
 .demo-tree-notice{background:#fff7e7;color:#6e4d17;border:1px solid #eed7a8;border-radius:12px;padding:11px 15px;font-size:13px;margin:14px 0 0;line-height:1.8}
 .demo-tree-notice strong{color:#6e4d17}
@@ -181,15 +181,15 @@ button{touch-action:manipulation}
 .call-demo-note{background:#fff6e8;border-radius:11px;padding:12px;color:#6e4d17;font-size:12px}
 #callDemoDialog{text-align:right}
 @media(max-width:760px){
- .vpn-control{padding:14px 13px;margin-top:18px;border-radius:20px}
- #protection.vpn-power-button{font-size:21px;min-height:85px;padding:10px 12px;gap:8px}
- .vpn-power-icon{font-size:28px}
- .vpn-toggle{width:55px;height:33px;padding:4px}
- .vpn-toggle-knob{width:25px;height:25px}
- .vpn-demo-on .vpn-toggle-knob{transform:translateX(22px)}
- .vpn-demo-label{font-size:10px;padding:4px 7px}
- .vpn-control-top strong{font-size:16px}
- .vpn-control-top small{font-size:11px}
+ .fatin-control{padding:14px 13px;margin-top:18px;border-radius:20px}
+ #protection.fatin-power-button{font-size:21px;min-height:85px;padding:10px 12px;gap:8px}
+ .fatin-power-icon{font-size:28px}
+ .fatin-toggle{width:55px;height:33px;padding:4px}
+ .fatin-toggle-knob{width:25px;height:25px}
+ .fatin-demo-on .fatin-toggle-knob{transform:translateX(22px)}
+ .fatin-demo-label{font-size:10px;padding:4px 7px}
+ .fatin-control-top strong{font-size:16px}
+ .fatin-control-top small{font-size:11px}
  .tree-foot-actions{margin-top:12px;width:100%}
  .tree-foot-actions button{width:100%}
  .demo-tree-notice{font-size:12px}
