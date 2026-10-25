@@ -1,11 +1,43 @@
 {
- "name": "درع فطن - مساعد التحقق من الاحتيال",
- "short_name": "درع فطن",
- "description": "فحص يدوي للروابط والرسائل مع مساعدة صوتية عربية. لا يوفر مراقبة تلقائية للجهاز.",
- "lang": "ar-SA", "dir": "rtl", "start_url": "./", "scope": "./",
- "display": "standalone", "background_color": "#f8f7fb", "theme_color": "#38216b",
- "icons": [{"src":"./icons/fatin-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-           {"src":"./icons/fatin-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}],
- "shortcuts": [{"name":"افحص رابطًا","short_name":"الفحص","url":"./#scan"}],
- "share_target": {"action":"./","method":"GET","enctype":"application/x-www-form-urlencoded","params":{"title":"title","text":"text","url":"shared_url"}}
+  "name": "درع فطن - مساعد التحقق من الاحتيال",
+  "short_name": "درع فطن",
+  "description": "زر واحد لفروع الفحص اليدوي مع حماية متصفح بواسطة إضافة متوافقة على الكمبيوتر. لا يراقب المكالمات أو التطبيقات تلقائيًا.",
+  "lang": "ar-SA",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f7fb",
+  "theme_color": "#38216b",
+  "icons": [
+    {
+      "src": "./icons/fatin-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/fatin-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "افحص رابطًا",
+      "short_name": "الفحص",
+      "url": "./#scan"
+    }
+  ],
+  "share_target": {
+    "action": "./",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "shared_url"
+    }
+  }
 }
